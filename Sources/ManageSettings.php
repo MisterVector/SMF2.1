@@ -48,7 +48,7 @@ function loadGeneralSettingParameters($subActions = array(), $defaultAction = nu
  */
 function ModifyFeatureSettings()
 {
-	global $context, $txt, $settings;
+	global $context, $txt, $settings, $modSettings, $language;
 
 	loadLanguage('Help');
 	loadLanguage('ManageSettings');
