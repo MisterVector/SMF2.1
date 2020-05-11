@@ -532,6 +532,13 @@ VALUES
 	('next_task_time', UNIX_TIMESTAMP());
 ---#
 
+---# SMF 2.1 requires registration and policy agreement.
+REPLACE INTO {$db_prefix}settings
+	(variable, value)
+VALUES ('requireAgreement', '1'),
+	   ('requirePolicyAgreement', '1');
+---#
+
 ---# Changing stats settings.
 ---{
 $request = upgrade_query("

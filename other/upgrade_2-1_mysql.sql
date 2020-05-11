@@ -51,6 +51,13 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}member_logins (
 ) ENGINE=MyISAM;
 ---#
 
+---# SMF 2.1 requires registration and policy agreements to be enabled so they must be set to 1.
+REPLACE INTO {$db_prefix}settings
+	(variable, value)
+VALUES ('requireAgreement', '1'),
+	   ('requirePolicyAgreement', '1');
+---#
+
 ---# Copying the current package backup setting...
 ---{
 if (!isset($modSettings['package_make_full_backups']) && isset($modSettings['package_make_backups']))

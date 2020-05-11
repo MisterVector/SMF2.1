@@ -1920,8 +1920,7 @@ upgrade_query("
 		('defaultMaxTopics', '" . (empty($GLOBALS['maxdisplay']) ? 20 : $GLOBALS['maxdisplay']) . "'),
 		('defaultMaxMembers', '" . (empty($GLOBALS['MembersPerPage']) ? 20 : $GLOBALS['MembersPerPage']) . "'),
 		('time_offset', '" . (empty($GLOBALS['timeoffset']) ? 0 : $GLOBALS['timeoffset']) . "'),
-		('cookieTime', '" . (empty($GLOBALS['Cookie_Length']) ? 60 : $GLOBALS['Cookie_Length']) . "'),
-		('requireAgreement', '" . @$GLOBALS['RegAgree'] . "')");
+		('cookieTime', '" . (empty($GLOBALS['Cookie_Length']) ? 60 : $GLOBALS['Cookie_Length']) . "')");
 ---}
 
 INSERT IGNORE INTO {$db_prefix}settings
@@ -1953,6 +1952,11 @@ VALUES
 DELETE FROM {$db_prefix}settings
 WHERE variable = 'agreement'
 LIMIT 1;
+
+REPLACE INTO {$db_prefix}settings
+	(variable, value)
+VALUES ('requireAgreement', '1'),
+	   ('requirePolicyAgreement', '1');
 ---#
 
 ---# Converting settings to options...
