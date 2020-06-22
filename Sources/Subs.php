@@ -2171,18 +2171,6 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			'parameters' => array(
 				'e' => array('optional' => true, 'quoted' => true, 'match' => '(.*?)', 'default' => 'oo', 'validate' => function ($eyes) use ($smcFunc)
 					{
-						static $css_added;
-
-						if (empty($css_added))
-						{
-							$css = base64_decode('cHJlW2RhdGEtZV1bZGF0YS10XXt3aGl0ZS1zcGFjZTpwcmUtd3JhcDtsaW5lLWhlaWdodDppbml0aWFsO31wcmVbZGF0YS1lXVtkYXRhLXRdID4gZGl2e2Rpc3BsYXk6dGFibGU7Ym9yZGVyOjFweCBzb2xpZDtib3JkZXItcmFkaXVzOjAuNWVtO3BhZGRpbmc6MWNoO21heC13aWR0aDo4MGNoO21pbi13aWR0aDoxMmNoO31wcmVbZGF0YS1lXVtkYXRhLXRdOjphZnRlcntkaXNwbGF5OmlubGluZS1ibG9jazttYXJnaW4tbGVmdDo4Y2g7bWluLXdpZHRoOjIwY2g7ZGlyZWN0aW9uOmx0cjtjb250ZW50OidcNUMgICBeX19eXEEgIFw1QyAgKCcgYXR0cihkYXRhLWUpICcpXDVDX19fX19fX1xBICAgIChfXylcNUMgICAgICAgIClcNUMvXDVDXEEgICAgICcgYXR0cihkYXRhLXQpICcgfHwtLS0tdyB8XEEgICAgICAgIHx8ICAgICB8fCc7fQ==');
-
-							addInlineJavaScript('
-								$("head").append("<style>" + ' . JavaScriptEscape($css) . ' + "</style>");', true);
-
-							$css_added = true;
-						}
-
 						return $smcFunc['substr']($eyes . 'oo', 0, 2);
 					},
 				),
@@ -2193,7 +2181,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				),
 			),
 			'before' => '<pre data-e="{e}" data-t="{t}"><div>',
-			'after' => '</div></pre>',
+			'after' => '</div><script>' . '$("head").append("<style>" + ' . JavaScriptEscape(base64_decode('cHJlW2RhdGEtZV1bZGF0YS10XXt3aGl0ZS1zcGFjZTpwcmUtd3JhcDtsaW5lLWhlaWdodDppbml0aWFsO31wcmVbZGF0YS1lXVtkYXRhLXRdID4gZGl2e2Rpc3BsYXk6dGFibGU7Ym9yZGVyOjFweCBzb2xpZDtib3JkZXItcmFkaXVzOjAuNWVtO3BhZGRpbmc6MWNoO21heC13aWR0aDo4MGNoO21pbi13aWR0aDoxMmNoO31wcmVbZGF0YS1lXVtkYXRhLXRdOjphZnRlcntkaXNwbGF5OmlubGluZS1ibG9jazttYXJnaW4tbGVmdDo4Y2g7bWluLXdpZHRoOjIwY2g7ZGlyZWN0aW9uOmx0cjtjb250ZW50OidcNUMgJycgJycgXl9fXlxBICcnIFw1QyAnJyAoJyBhdHRyKGRhdGEtZSkgJylcNUNfX19fX19fXEEgJycgJycgJycgKF9fKVw1QyAnJyAnJyAnJyAnJyAnJyAnJyAnJyApXDVDL1w1Q1xBICcnICcnICcnICcnICcgYXR0cihkYXRhLXQpICcgfHwtLS0tdyB8XEEgJycgJycgJycgJycgJycgJycgJycgfHwgJycgJycgJycgJycgfHwnO30=')) . ' + "</style>");' . '</script></pre>',
 			'block_level' => true,
 		);
 
@@ -3691,7 +3679,7 @@ function setupThemeContext($forceload = false)
 		$context['user']['popup_messages'] = false;
 
 		if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1)
-			$txt['welcome_guest'] .= $txt['welcome_guest_activate'];
+			$txt['welcome_guest'] .= sprintf($txt['welcome_guest_activate'], $scripturl);
 
 		// If we've upgraded recently, go easy on the passwords.
 		if (!empty($modSettings['disableHashTime']) && ($modSettings['disableHashTime'] == 1 || time() < $modSettings['disableHashTime']))
@@ -3985,14 +3973,14 @@ function template_header()
  */
 function theme_copyright()
 {
-	global $forum_copyright;
+	global $forum_copyright, $scripturl;
 
 	// Don't display copyright for things like SSI.
 	if (SMF !== 1)
 		return;
 
 	// Put in the version...
-	printf($forum_copyright, SMF_FULL_VERSION, SMF_SOFTWARE_YEAR);
+	printf($forum_copyright, SMF_FULL_VERSION, SMF_SOFTWARE_YEAR, $scripturl);
 }
 
 /**

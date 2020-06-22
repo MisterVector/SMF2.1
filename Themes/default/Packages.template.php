@@ -26,7 +26,7 @@ function template_view_package()
 
 	echo '
 		<div class="cat_bar">
-			<h3 class="catbg">', $txt[($context['uninstalling'] ? 'un' : '') . 'install_mod'], '</h3>
+			<h3 class="catbg">', $txt[($context['uninstalling'] ? 'uninstall' : ('install_' . $context['extract_type']))], '</h3>
 		</div>
 		<div class="information">';
 
@@ -90,7 +90,7 @@ function template_view_package()
 		<div class="windowbg">
 			', $context['package_readme'], '
 			<span class="floatright">', $txt['package_available_readme_language'], '
-				<select name="readme_language" id="readme_language" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl + \'', '?action=admin;area=packages;sa=', $context['uninstalling'] ? 'uninstall' : 'install', ';package=', $context['filename'], ';readme=\' + this.options[this.selectedIndex].value + \';license=\' + get_selected(\'license_language\'));">';
+				<select name="readme_language" id="readme_language" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl + \'', '?action=admin;area=packages;sa=', $context['uninstalling'] ? 'uninstall' : 'install', ';package=', $context['filename'], ';license=\' + this.options[this.selectedIndex].value + \';readme=\' + get_selected(\'readme_language\'));">';
 
 		foreach ($context['readmes'] as $a => $b)
 			echo '
@@ -113,7 +113,7 @@ function template_view_package()
 		<div class="windowbg">
 			', $context['package_license'], '
 			<span class="floatright">', $txt['package_available_license_language'], '
-				<select name="license_language" id="license_language" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl + \'', '?action=admin;area=packages;sa=install', ';package=', $context['filename'], ';license=\' + this.options[this.selectedIndex].value + \';readme=\' + get_selected(\'readme_language\'));">';
+				<select name="license_language" id="license_language" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl + \'', '?action=admin;area=packages;sa=install', ';package=', $context['filename'], ';readme=\' + this.options[this.selectedIndex].value + \';license=\' + get_selected(\'license_language\'));">';
 
 		foreach ($context['licenses'] as $a => $b)
 			echo '
@@ -402,7 +402,7 @@ function template_view_package()
 	// And a bit more for database changes.
 	if ($context['uninstalling'] && !empty($context['database_changes']))
 		echo '
-		makeToggle(document.getElementById(\'db_changes_div\'), ', JavaScriptEscape($txt['package_db_uninstall_details']) , ');';
+		makeToggle(document.getElementById(\'db_changes_div\'), ', JavaScriptEscape($txt['package_db_uninstall_details']), ');';
 
 	echo '
 	</script>';
@@ -595,22 +595,18 @@ function template_browse()
 	echo '
 		</div><!-- #admin_form_wrapper -->';
 
-	$mods_available = false;
-	foreach ($context['modification_types'] as $type)
-	{
-		if (!empty($context['available_' . $type]))
-		{
-			template_show_list('packages_lists_' . $type);
-			$mods_available = true;
-		}
-	}
-
-	if (!$mods_available)
+	if ($context['available_packages'] == 0)
 		echo '
 		<div class="noticebox">', $txt['no_packages'], '</div>';
 	else
+	{
+		foreach ($context['modification_types'] as $type)
+			if (!empty($context['packages_lists_' . $type]['rows']))
+				template_show_list('packages_lists_' . $type);
+
 		echo '
 		<br>';
+	}
 
 	// The advanced (emulation) box, collapsed by default
 	echo '
