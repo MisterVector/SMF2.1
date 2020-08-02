@@ -444,14 +444,21 @@ function determineActions($urls, $preferred_prefix = false)
 			loadLanguage('Errors');
 
 			if (isset($txt[$actions['error']]))
-				$error_message = str_replace('"', '&quot;', empty($actions['who_error_params']) ? $txt[$actions['error']] : vsprintf($txt[$actions['error']], $actions['who_error_params']));
+				$error_message = str_replace('"', '&quot;', empty($actions['error_params']) ? $txt[$actions['error']] : vsprintf($txt[$actions['error']], $actions['error_params']));
 			elseif ($actions['error'] == 'guest_login')
 				$error_message = str_replace('"', '&quot;', $txt['who_guest_login']);
 			else
 				$error_message = str_replace('"', '&quot;', $actions['error']);
 
 			if (!empty($error_message))
-				$data[$k] .= ' <span class="main_icons error" title="' . $error_message . '"></span>';
+			{
+				$error_message = ' <span class="main_icons error" title="' . $error_message . '"></span>';
+
+				if (is_array($data[$k]))
+					$data[$k]['error_message'] = $error_message;
+				else
+					$data[$k] .= $error_message;
+			}
 		}
 
 		// Maybe the action is integrated into another system?
@@ -678,7 +685,6 @@ function Credits($in_admin = false)
 
 						// Former Customizers
 						'Brannon "B" Hall',
-						'Gwenwyfar',
 						'Jack "akabugeyes" Thorsen',
 						'Jason "JBlaze" Clemons',
 						'Jessica "Suki" González',
@@ -727,7 +733,6 @@ function Credits($in_admin = false)
 						'Adish "(F.L.A.M.E.R)" Patel',
 						'Bryan "Runic" Deakin',
 						'Marcus "cσσкιє мσηѕтєя" Forsberg',
-						'Mert "Antes" Alınbay',
 						'Ralph "[n3rve]" Otowo',
 					),
 				),
