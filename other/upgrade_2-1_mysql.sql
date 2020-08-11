@@ -52,10 +52,10 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}member_logins (
 ---#
 
 ---# SMF 2.1 requires registration and policy agreements to be enabled so they must be set to 1.
-REPLACE INTO {$db_prefix}settings
+INSERT IGNORE INTO {$db_prefix}settings
 	(variable, value)
 VALUES ('requireAgreement', '1'),
-	   ('requirePolicyAgreement', '1');
+	   ('requirePolicyAgreement', '0');
 ---#
 
 ---# Copying the current package backup setting...

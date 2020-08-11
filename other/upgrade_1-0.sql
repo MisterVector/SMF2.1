@@ -1953,10 +1953,10 @@ DELETE FROM {$db_prefix}settings
 WHERE variable = 'agreement'
 LIMIT 1;
 
-REPLACE INTO {$db_prefix}settings
+INSERT IGNORE INTO {$db_prefix}settings
 	(variable, value)
 VALUES ('requireAgreement', '1'),
-	   ('requirePolicyAgreement', '1');
+	   ('requirePolicyAgreement', '0');
 ---#
 
 ---# Converting settings to options...

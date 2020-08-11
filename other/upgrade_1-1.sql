@@ -278,10 +278,10 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '1.1 Beta
 ---#
 
 ---# SMF 2.1 requires registration and policy agreement.
-REPLACE INTO {$db_prefix}settings
+INSERT IGNORE INTO {$db_prefix}settings
 	(variable, value)
 VALUES ('requireAgreement', '1'),
-	   ('requirePolicyAgreement', '1');
+	   ('requirePolicyAgreement', '0');
 ---#
 
 ---# Adding PM spam protection settings.
